@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Giftr</title>
+</head>
+<body>
+<h1>All Registered Gifters</h1>
+<table>
+  <tr>
+    <td>Last Name</td>
+    <td>First Name</td>
+  </tr>
+  <tr th:each="gifter: ${gifters}">
+    <td th:text="${gifter.lastName}">Last Name</td>
+    <td th:text="${gifter.firstName}">First Name</td>
+  </tr>
+</table>
+</body>
+</html>

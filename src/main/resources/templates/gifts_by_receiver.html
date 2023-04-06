@@ -1,0 +1,32 @@
+<!DOCTYPE html >
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gifts to User</title>
+</head>
+<body>
+    <h2>Gifts to <span th:text="${receivers_giftings[0].receivers[0].firstName}">User</span></h2>
+<table border="1 px black">
+    <tr>
+        <th>Givers</th>
+        <th>Gift</th>
+        <th>Date</th>
+        <th>Occasion</th>
+        <th>Favourite</th>
+    </tr>
+    <tr th:each="gifting: ${receivers_giftings}">
+        <td>
+        <th:block th:each="giver: ${gifting.givers}">
+             <span th:text="${giver.lastName} + ', ' + ${giver.firstName}">Givers</span>
+        </th:block>
+        </td>
+        <td th:text="${gifting.gift.name}">Gift</td>
+        <td th:text="${gifting.date}">Date</td>
+        <td th:text="${gifting.occasion}">Occasion</td>
+        <td th:text="${gifting.favourite}">Favourite</td>
+    </tr>
+
+
+</table>
+</body>
+</html>

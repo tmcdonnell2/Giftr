@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Giftings Page</h1>
+<table>
+  <tr>
+    <td>Name</td>
+    <td>Date</td>
+    <td>Giver</td>
+  </tr>
+  <tr th:each="gifting: ${giftings}">
+    <td th:text="${gifting.giftName}">Gift Name</td>
+    <td th:text="${gifting.date}">Date</td>
+    <th:block th:each="giver: ${gifting.givers}">
+      <td th:text="${giver.firstName} + ','"  >firstName</td>
+    </th:block>
+  </tr>
+</table>
+
+</body>
+</html>
