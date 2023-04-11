@@ -1,6 +1,9 @@
 package com.giftr.appuser;
 
 import com.giftr.model.Gifter;
+import com.giftr.registration.token.ConfirmationToken;
+import com.giftr.registration.token.ConfirmationTokenRepository;
+import com.giftr.registration.token.ConfirmationTokenService;
 import com.giftr.repository.GifterRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -8,17 +11,23 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 @Service
 public class AppUserService implements UserDetailsService {
 
     private static final String USER_NOT_FOUND = "User with email %s not found";
     private final GifterRepository gifterRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final ConfirmationTokenService confirmationTokenService;
 
     public AppUserService(GifterRepository gifterRepository,
-            BCryptPasswordEncoder bCryptPasswordEncoder) {
+                        BCryptPasswordEncoder bCryptPasswordEncoder,
+                        ConfirmationTokenService confirmationTokenService) {
         this.gifterRepository = gifterRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.confirmationTokenService = confirmationTokenService;
     }
 
     @Override
@@ -39,8 +48,22 @@ public class AppUserService implements UserDetailsService {
 
         gifterRepository.save(user);
 
-        // TODO: send confirmation token
+        String token = UUID.randomUUID().toString();
+        ConfirmationToken confirmationToken = new ConfirmationToken(
+            token,
+            LocalDateTime.now(),
+            LocalDateTime.now().plusMinutes(15), // From a config file?
+            user
+        );
 
-        return "it works";
+        confirmationTokenService.saveConfirmationToken(confirmationToken);
+
+        // TODO: SEND EMAIL
+
+        return token;
+    }
+
+    public int enableAppUser(String email) {
+        return gifterRepository.enableAppUser(email);
     }
 }
