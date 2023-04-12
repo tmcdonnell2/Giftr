@@ -26,4 +26,6 @@ public interface ConfirmationTokenRepository
             """
     )
     int updateConfirmedAt(String token, LocalDateTime now);
+
+    Optional<ConfirmationToken> findByGifter(long gifterID);
 }

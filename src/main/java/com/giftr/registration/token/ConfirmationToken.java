@@ -34,18 +34,18 @@ public class ConfirmationToken {
             nullable = false,
             name = "gifter_id"
     )
-    private Gifter appUser;
+    private Gifter gifter;
 
     public ConfirmationToken() {}
 
     public ConfirmationToken(String token,
                             LocalDateTime createdAt,
                             LocalDateTime expiresAt,
-                            Gifter appUser) {
+                            Gifter gifter) {
         this.token = token;
         this.createdAt = createdAt;
         this.expiresAt = expiresAt;
-        this.appUser = appUser;
+        this.gifter = gifter;
     }
 
     public Long getId() {
@@ -89,10 +89,10 @@ public class ConfirmationToken {
     }
 
     public Gifter getAppUser() {
-        return appUser;
+        return gifter;
     }
 
-    public void setAppUser(Gifter appUser) {
-        this.appUser = appUser;
+    public void setAppUser(Gifter gifter) {
+        this.gifter = gifter;
     }
 }

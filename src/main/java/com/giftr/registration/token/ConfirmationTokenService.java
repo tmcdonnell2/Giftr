@@ -18,6 +18,10 @@ public class ConfirmationTokenService {
         return confirmationTokenRepository.findByToken(token);
     }
 
+    public Optional<ConfirmationToken> getToken(long gifterId) {
+        return confirmationTokenRepository.findByGifter(gifterId);
+    }
+
     public void saveConfirmationToken(ConfirmationToken token) {
         confirmationTokenRepository.save(token);
     }

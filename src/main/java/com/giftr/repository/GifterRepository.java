@@ -22,7 +22,7 @@ public interface GifterRepository extends CrudRepository<Gifter, Long> {
     @Modifying
     @Query("""
             Update Gifter g \
-            SET g.enabled = TRUE WHERE g.email = ?1 """
+            SET g.enabled = TRUE WHERE g.email = ?1"""
     )
     int enableAppUser(String email);
 }
