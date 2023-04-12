@@ -2,6 +2,7 @@ package com.giftr.model;
 
 import com.giftr.appuser.AppUserRole;
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +14,7 @@ import java.util.Collections;
 @Table(
     uniqueConstraints=@UniqueConstraint(columnNames="id")
 )
+@EqualsAndHashCode
 public class Gifter implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

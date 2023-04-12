@@ -2,7 +2,6 @@ package com.giftr.appuser;
 
 import com.giftr.model.Gifter;
 import com.giftr.registration.token.ConfirmationToken;
-import com.giftr.registration.token.ConfirmationTokenRepository;
 import com.giftr.registration.token.ConfirmationTokenService;
 import com.giftr.repository.GifterRepository;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -39,7 +39,18 @@ public class AppUserService implements UserDetailsService {
     }
 
     public String signUpUser(Gifter user) {
-        if (gifterRepository.findByEmail(user.getEmail()).isPresent()) {
+
+        Optional<Gifter> optionalUser = gifterRepository.findByEmail(user.getEmail());
+        if (optionalUser.isPresent()) {
+            Gifter userInDatabase = optionalUser.get();
+            if (user.equals(userInDatabase) &&
+                !userInDatabase.isEnabled()) {
+
+                Optional<ConfirmationToken> token = confirmationTokenService.getToken(user.getId());
+                if (token.isPresent()) {
+                    return token.get().getToken();
+                }
+            }
             throw new IllegalStateException("email already taken");
         }
 
@@ -52,13 +63,11 @@ public class AppUserService implements UserDetailsService {
         ConfirmationToken confirmationToken = new ConfirmationToken(
             token,
             LocalDateTime.now(),
-            LocalDateTime.now().plusMinutes(15), // From a config file?
+            LocalDateTime.now().plusHours(24), // From a config file?
             user
         );
 
         confirmationTokenService.saveConfirmationToken(confirmationToken);
-
-        // TODO: SEND EMAIL
 
         return token;
     }

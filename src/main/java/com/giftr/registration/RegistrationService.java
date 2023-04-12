@@ -7,7 +7,6 @@ import com.giftr.email.EmailSender;
 import com.giftr.model.Gifter;
 import com.giftr.registration.token.ConfirmationToken;
 import com.giftr.registration.token.ConfirmationTokenService;
-import com.giftr.repository.GifterRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +19,7 @@ public class RegistrationService {
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailValidator emailValidator;
     private final EmailSender emailSender;
+    private static final int apiVersion = 1;
 
     public RegistrationService(AppUserService appUserService,
             ConfirmationTokenService confirmationTokenService, EmailValidator emailValidator,
@@ -43,7 +43,8 @@ public class RegistrationService {
                 AppUserRole.USER
         ));
 
-        String link = "http://localhost:8080/api/registration/confirm?token=" + token;
+        String link = String.format("http://localhost:8080/api/v%s/registration/confirm?token=%s",
+                        apiVersion, token);
         emailSender.send(
                 request.getEmail(),
                 buildEmail(request.getFirstName(), link));
@@ -52,10 +53,10 @@ public class RegistrationService {
     }
 
     @Transactional
-    public String confirmToken(String token) {
+    public void confirmToken(String token) {
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getToken(token)
-                .orElseThrow(() -> new IllegalStateException("token now found"));
+                .orElseThrow(() -> new IllegalStateException("token not found"));
 
         if (confirmationToken.getConfirmedAt() != null) {
             throw new IllegalStateException("Email already confirmed");
@@ -72,8 +73,6 @@ public class RegistrationService {
         appUserService.enableAppUser(
             confirmationToken.getAppUser().getEmail()
         );
-
-        return "confirmed";
     }
 
     private String buildEmail(String name, String link) {
