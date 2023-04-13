@@ -1,6 +1,7 @@
 package com.giftr.registration;
 
 import com.giftr.appuser.AppUserService;
+import com.giftr.exceptions.MailSenderException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ui.Model;
@@ -22,8 +23,13 @@ public class RegistrationController {
     }
 
     @PostMapping
-    public String register(@RequestBody RegistrationRequest request) {
-        return registrationService.register(request);
+    public String register(@RequestBody RegistrationRequest request){
+        try {
+            return registrationService.register(request);
+        } catch (MailSenderException e) {
+            LOGGER.error(e.getMessage() + " because " + e.getCause());
+            return "Unable to connect mail server. Please try again.";
+        }
     }
 
     @GetMapping(path = "/confirm")

@@ -1,9 +1,7 @@
 package com.giftr.appuser;
 
-import com.giftr.model.Gifter;
 import com.giftr.registration.token.ConfirmationToken;
 import com.giftr.registration.token.ConfirmationTokenService;
-import com.giftr.repository.GifterRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -38,8 +36,7 @@ public class AppUserService implements UserDetailsService {
                         String.format(USER_NOT_FOUND, email)));
     }
 
-    public String signUpUser(Gifter user) {
-
+    public ConfirmationToken signUpUser(Gifter user) {
         Optional<Gifter> optionalUser = gifterRepository.findByEmail(user.getEmail());
         if (optionalUser.isPresent()) {
             Gifter userInDatabase = optionalUser.get();
@@ -48,16 +45,14 @@ public class AppUserService implements UserDetailsService {
 
                 Optional<ConfirmationToken> token = confirmationTokenService.getToken(user.getId());
                 if (token.isPresent()) {
-                    return token.get().getToken();
+                    return token.get();
                 }
             }
-            throw new IllegalStateException("email already taken");
+            throw new IllegalStateException("Email already taken");
         }
 
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
-
-        gifterRepository.save(user);
 
         String token = UUID.randomUUID().toString();
         ConfirmationToken confirmationToken = new ConfirmationToken(
@@ -67,12 +62,17 @@ public class AppUserService implements UserDetailsService {
             user
         );
 
+        gifterRepository.save(user);
         confirmationTokenService.saveConfirmationToken(confirmationToken);
 
-        return token;
+        return confirmationToken;
     }
 
     public int enableAppUser(String email) {
         return gifterRepository.enableAppUser(email);
+    }
+
+    public void removeUser(Gifter user) {
+        gifterRepository.delete(user);
     }
 }

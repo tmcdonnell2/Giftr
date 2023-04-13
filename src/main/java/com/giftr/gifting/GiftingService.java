@@ -1,17 +1,15 @@
-package com.giftr.service;
+package com.giftr.gifting;
 
-import com.giftr.model.Gift;
-import com.giftr.model.Gifter;
-import com.giftr.model.GiftingEvent;
-import com.giftr.repository.GiftRepository;
-import com.giftr.repository.GifterRepository;
-import com.giftr.repository.GiftingEventRepository;
+import com.giftr.gift.Gift;
+import com.giftr.appuser.Gifter;
+import com.giftr.gift.GiftRepository;
+import com.giftr.appuser.GifterRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class GiftingService {
@@ -27,12 +25,11 @@ public class GiftingService {
     }
 
     public List<Gifting> getGiftings() {
-        Iterable<GiftingEvent> giftingEvents = giftingEventRepository.findAll();
+        Iterable<Gifting> giftingEvents = giftingEventRepository.findAll();
         List<Gifting> giftings = new ArrayList<>();
         giftingEvents.forEach(giftingEvent -> {
             Gifting gifting = new Gifting();
             gifting.setGift(giftingEvent.getGift());
-            gifting.setGiftName(giftingEvent.getGift().getName());
             gifting.setGivers(giftingEvent.getGivers());
             gifting.setReceivers(giftingEvent.getReceivers());
             gifting.setOccasion(giftingEvent.getOccasion());
@@ -45,12 +42,11 @@ public class GiftingService {
     }
 
     public List<Gifting> getGiftingForDate(LocalDate date) {
-        Iterable<GiftingEvent> giftingEvents = giftingEventRepository.findAllByDate(date);
+        Iterable<Gifting> giftingEvents = giftingEventRepository.findAllByDate(date);
         List<Gifting> giftings = new ArrayList<>();
         giftingEvents.forEach(giftingEvent -> {
             Gifting gifting = new Gifting();
             gifting.setGift(giftingEvent.getGift());
-            gifting.setGiftName(giftingEvent.getGift().getName());
             gifting.setGivers(giftingEvent.getGivers());
             gifting.setReceivers(giftingEvent.getReceivers());
             gifting.setOccasion(giftingEvent.getOccasion());
@@ -75,11 +71,14 @@ public class GiftingService {
         return gifterList;
     }
 
-    public Optional<Gifter> getGifterById(long id) {
-        return gifterRepository.findById(id);
+    public Gifter getGifterById(long id) {
+        return gifterRepository.findById(id)
+                    .orElseThrow(
+                        () -> new IllegalStateException("Gifter could not be found with id")
+                    );
     }
 
-    public Gifter add(Gifter gifter) {
+    public Gifter addGifter(Gifter gifter) {
         if (gifter == null) {
             throw new NullPointerException("Passed in Gifter cannot be null");
         }
@@ -87,17 +86,24 @@ public class GiftingService {
         return gifterRepository.save(gifter);
     }
 
+    public Gifting addGifting(Gifting gifting) {
+        if (gifting == null) {
+            throw new NullPointerException("Passed in gifting cannot be null");
+        }
+
+        return giftingEventRepository.save(gifting);
+    }
+
     public Iterable<Gift> getGifts() {
         return giftRepository.findAll();
     }
 
     public List<Gifting> getGiftingByReceivers(Gifter receiver) {
-        Iterable<GiftingEvent> giftingEvents = giftingEventRepository.findAllByReceivers(receiver);
+        Iterable<Gifting> giftingEvents = giftingEventRepository.findAllByReceivers(receiver);
         List<Gifting> giftings = new ArrayList<>();
         giftingEvents.forEach(giftingEvent -> {
             Gifting gifting = new Gifting();
             gifting.setGift(giftingEvent.getGift());
-            gifting.setGiftName(giftingEvent.getGift().getName());
             gifting.setGivers(giftingEvent.getGivers());
             gifting.setReceivers(giftingEvent.getReceivers());
             gifting.setOccasion(giftingEvent.getOccasion());
@@ -107,5 +113,24 @@ public class GiftingService {
         });
 
         return giftings;
+    }
+
+    public Gifter getGifterByEmail(String email) {
+        return gifterRepository.findByEmail(email)
+            .orElseThrow(
+                () -> new IllegalStateException(
+                    String.format("Could not find user by email: %s", email))
+            );
+    }
+
+    public List<Gifting> getGiversByReceivers(List<Gifter> receivers) {
+        return giftingEventRepository.findAllGiversByReceiversIn(receivers)
+            .orElseThrow(
+                () -> new IllegalStateException(
+                        String.format("Could not find givers by receiver ids %s",
+                                Arrays.toString(receivers.toArray()))
+                )
+            );
+
     }
 }

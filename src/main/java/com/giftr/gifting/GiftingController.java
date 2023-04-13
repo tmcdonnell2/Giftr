@@ -1,8 +1,6 @@
-package com.giftr.controller;
+package com.giftr.gifting;
 
-import com.giftr.model.Gifter;
-import com.giftr.service.Gifting;
-import com.giftr.service.GiftingService;
+import com.giftr.appuser.Gifter;
 import com.giftr.util.DateUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,12 +34,9 @@ public class GiftingController {
     @GetMapping(path = "/user")
     public String getGiftingsByReceiver(@RequestParam(value = "id", required = true)
     long receiverId, Model model) {
-        Optional<Gifter> receiver = giftingService.getGifterById(receiverId);
-        if (receiver.isPresent()) {
-            List<Gifting> giftings = giftingService.getGiftingByReceivers(receiver.get());
-            model.addAttribute("receivers_giftings", giftings);
-            return "gifts_by_receiver";
-        }
-        return "error";
+        Gifter receiver = giftingService.getGifterById(receiverId);
+        List<Gifting> giftings = giftingService.getGiftingByReceivers(receiver);
+        model.addAttribute("receivers_giftings", giftings);
+        return "gifts_by_receiver";
     }
 }

@@ -1,7 +1,6 @@
-package com.giftr.controller;
+package com.giftr.appuser;
 
-import com.giftr.model.Gifter;
-import com.giftr.service.GiftingService;
+import com.giftr.gifting.GiftingService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

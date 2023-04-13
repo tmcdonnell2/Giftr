@@ -6,6 +6,8 @@ build/
 **/src/main/resources/application.properties
 **/src/main/resources/application.yaml
 **/src/main/resources/data.sql
+/logs
+/testdb
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
