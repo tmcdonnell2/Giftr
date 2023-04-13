@@ -4,9 +4,11 @@ package com.giftr.registration;
 import com.giftr.appuser.AppUserRole;
 import com.giftr.appuser.AppUserService;
 import com.giftr.email.EmailSender;
-import com.giftr.model.Gifter;
+import com.giftr.appuser.Gifter;
+import com.giftr.exceptions.MailSenderException;
 import com.giftr.registration.token.ConfirmationToken;
 import com.giftr.registration.token.ConfirmationTokenService;
+import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -30,26 +32,39 @@ public class RegistrationService {
         this.emailSender = emailSender;
     }
 
-    public String register(RegistrationRequest request) {
+    public String register(RegistrationRequest request) throws MailSenderException {
         boolean isValidEmail = emailValidator.test(request.getEmail());
         if (!isValidEmail) {
             throw new IllegalStateException("email not valid");
         }
-        String token = appUserService.signUpUser(new Gifter(
+
+        Gifter user = new Gifter(
                 request.getFirstName(),
                 request.getLastName(),
                 request.getEmail(),
                 request.getPassword(),
                 AppUserRole.USER
-        ));
+        );
+
+        ConfirmationToken confirmationToken = appUserService.signUpUser(user);
 
         String link = String.format("http://localhost:8080/api/v%s/registration/confirm?token=%s",
-                        apiVersion, token);
-        emailSender.send(
-                request.getEmail(),
-                buildEmail(request.getFirstName(), link));
+                        apiVersion, confirmationToken.getToken());
 
-        return token;
+        try {
+            emailSender.send(
+                    request.getEmail(),
+                    buildEmail(request.getFirstName(),
+                    link));
+        } catch (Exception e) {
+            // Problem with email server
+            confirmationTokenService.deleteConfirmationToken(confirmationToken);
+            appUserService.removeUser(user);
+            throw new MailSenderException("An error occurred while trying to send confirmation email",
+                    e.getCause());
+        }
+
+        return "Token Created";
     }
 
     @Transactional

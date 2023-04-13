@@ -31,4 +31,8 @@ public class ConfirmationTokenService {
                 token, LocalDateTime.now()
         );
     }
+
+    public void deleteConfirmationToken(ConfirmationToken confirmationToken) {
+        confirmationTokenRepository.delete(confirmationToken);
+    }
 }

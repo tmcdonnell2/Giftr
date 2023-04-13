@@ -1,4 +1,4 @@
-package com.giftr.model;
+package com.giftr.appuser;
 
 import com.giftr.appuser.AppUserRole;
 import jakarta.persistence.*;

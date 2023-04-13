@@ -1,12 +1,14 @@
-package com.giftr.model;
+package com.giftr.gifting;
 
+import com.giftr.gift.Gift;
+import com.giftr.appuser.Gifter;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-public class GiftingEvent {
+public class Gifting {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,7 +58,7 @@ public class GiftingEvent {
         return favorite;
     }
 
-    public void setFavorite(boolean favorite) {
+    public void setFavourite(boolean favorite) {
         this.favorite = favorite;
     }
 

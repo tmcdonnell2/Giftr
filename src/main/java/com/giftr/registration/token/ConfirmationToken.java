@@ -1,6 +1,6 @@
 package com.giftr.registration.token;
 
-import com.giftr.model.Gifter;
+import com.giftr.appuser.Gifter;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

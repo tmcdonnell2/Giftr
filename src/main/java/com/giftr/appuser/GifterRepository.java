@@ -1,6 +1,6 @@
-package com.giftr.repository;
+package com.giftr.appuser;
 
-import com.giftr.model.Gifter;
+import com.giftr.appuser.Gifter;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

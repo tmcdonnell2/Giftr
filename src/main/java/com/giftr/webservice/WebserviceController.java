@@ -1,9 +1,9 @@
 package com.giftr.webservice;
 
-import com.giftr.model.Gift;
-import com.giftr.model.Gifter;
-import com.giftr.service.Gifting;
-import com.giftr.service.GiftingService;
+import com.giftr.gift.Gift;
+import com.giftr.appuser.Gifter;
+import com.giftr.gifting.Gifting;
+import com.giftr.gifting.GiftingService;
 import com.giftr.util.DateUtil;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

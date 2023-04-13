@@ -1,4 +1,4 @@
-package com.giftr.model;
+package com.giftr.gift;
 
 import jakarta.persistence.*;
 
