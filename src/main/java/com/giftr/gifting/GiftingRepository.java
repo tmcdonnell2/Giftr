@@ -8,8 +8,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-public interface GiftingEventRepository extends CrudRepository<Gifting, Long> {
+public interface GiftingRepository extends CrudRepository<Gifting, Long> {
     Iterable<Gifting> findAllByDate(@Param("date") LocalDate date);
-    Iterable<Gifting> findAllByReceivers(Gifter receiver);
-    Optional<List<Gifting>> findAllGiversByReceiversIn(List<Gifter> gifter);
+    Iterable<Gifting> findAllByReceiver(Gifter receiver);
+    Optional<List<Gifting>> findAllGiversByReceiver(Gifter receiver);
 }

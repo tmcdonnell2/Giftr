@@ -3,12 +3,11 @@ package com.giftr.registration;
 
 import com.giftr.appuser.AppUserRole;
 import com.giftr.appuser.AppUserService;
-import com.giftr.email.EmailSender;
 import com.giftr.appuser.Gifter;
+import com.giftr.email.EmailSender;
 import com.giftr.exceptions.MailSenderException;
 import com.giftr.registration.token.ConfirmationToken;
 import com.giftr.registration.token.ConfirmationTokenService;
-import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +20,7 @@ public class RegistrationService {
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailValidator emailValidator;
     private final EmailSender emailSender;
-    private static final int apiVersion = 1;
+    private static final int API_VERSION = 1;
 
     public RegistrationService(AppUserService appUserService,
             ConfirmationTokenService confirmationTokenService, EmailValidator emailValidator,
@@ -49,7 +48,7 @@ public class RegistrationService {
         ConfirmationToken confirmationToken = appUserService.signUpUser(user);
 
         String link = String.format("http://localhost:8080/api/v%s/registration/confirm?token=%s",
-                        apiVersion, confirmationToken.getToken());
+                API_VERSION, confirmationToken.getToken());
 
         try {
             emailSender.send(

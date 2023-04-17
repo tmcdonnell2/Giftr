@@ -1,6 +1,5 @@
 package com.giftr.appuser;
 
-import com.giftr.appuser.AppUserRole;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
