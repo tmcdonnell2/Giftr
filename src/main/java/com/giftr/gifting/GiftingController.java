@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/giftings")
@@ -35,7 +34,7 @@ public class GiftingController {
     public String getGiftingsByReceiver(@RequestParam(value = "id", required = true)
     long receiverId, Model model) {
         Gifter receiver = giftingService.getGifterById(receiverId);
-        List<Gifting> giftings = giftingService.getGiftingByReceivers(receiver);
+        List<Gifting> giftings = giftingService.getGiftingByReceiver(receiver);
         model.addAttribute("receivers_giftings", giftings);
         return "gifts_by_receiver";
     }

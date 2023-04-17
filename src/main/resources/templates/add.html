@@ -1,20 +1,23 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
-    <title>Spring Security Example</title>
+    <title>Giftr - Giftings</title>
 </head>
 <body>
 <h1>Add a Gift</h1>
 
-<form action="#" th:action="@{/add}" th:object="${gifting}" method="post">
+<form action="#" th:action="@{/home/add}" th:object="${gifting}" method="post">
     <label for="giftName">Gift Name</label>
     <input type="text" id="giftName" name="giftName" placeholder="What was the gift?" th:field="*{gift.name}"/>
 
     <label for="occasion">Occasion:</label>
     <input type="text" name="occasion" id="occasion" list="occasion_list" th:field="*{occasion}"
            placeholder="What event did you receive it?"/>
-    <datalist id="occasion_list" th:each="occasion : ${T(com.giftr.gifting.Occasion).values()}">
-        <option th:text="${occasion.displayValue}">Occasion</option>
+    <datalist id="occasion_list">
+        <select>
+            <option th:each="occasion : ${T(com.giftr.gifting.Occasion).values()}" th:value="${occasion.displayValue}">
+            </option>
+        </select>
     </datalist>
 
     <label for="date">Date</label>
@@ -23,7 +26,9 @@
     <label>Giver</label>
     <input list="givers" th:field="*{givers}"/>
     <datalist id="givers" th:if="${not #lists.isEmpty(givers)}" th:each="giver: ${givers}">
-        <option value="${giver.firstName}"></option>
+        <select>
+            <option value="${giver}" label="${giver}"></option>
+        </select>
     </datalist>
     <datalist id="givers" th:if="${#lists.isEmpty(givers)}">
     </datalist>

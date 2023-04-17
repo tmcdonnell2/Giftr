@@ -1,7 +1,7 @@
 package com.giftr.gifting;
 
-import com.giftr.gift.Gift;
 import com.giftr.appuser.Gifter;
+import com.giftr.gift.Gift;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -14,15 +14,13 @@ public class Gifting {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToMany
-    @JoinColumn(name = "gifter_id")
-    private List<Gifter> givers;
+    private List<String> givers;
 
-    @ManyToMany
+    @ManyToOne
     @JoinColumn(name = "gifter_id")
-    private List<Gifter> receivers;
+    private Gifter receiver;
 
-    @OneToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "gift_id")
     private Gift gift;
 
@@ -62,20 +60,20 @@ public class Gifting {
         this.favorite = favorite;
     }
 
-    public List<Gifter> getGivers() {
+    public List<String> getGivers() {
         return givers;
     }
 
-    public void setGivers(List<Gifter> givers) {
+    public void setGivers(List<String> givers) {
         this.givers = givers;
     }
 
-    public List<Gifter> getReceivers() {
-        return this.receivers;
+    public Gifter getReceiver() {
+        return this.receiver;
     }
 
-    public void setReceivers(List<Gifter> receivers) {
-        this.receivers = receivers;
+    public void setReceiver(Gifter receiver) {
+        this.receiver = receiver;
     }
 
     public Gift getGift() {

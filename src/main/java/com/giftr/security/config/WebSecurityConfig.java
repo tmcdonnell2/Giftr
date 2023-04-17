@@ -30,13 +30,13 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf().disable() // TODO: remove when only using form based login
             .authorizeHttpRequests(auth -> {
                 try {
                     auth
                         .requestMatchers("/", "/error", "/h2/**", "/api/v*/**",
                                 "/api/v*/registration/**", "/confirmed")
                             .anonymous()
+                            .requestMatchers("/home/add/").hasAnyRole("USER")
                         .anyRequest()
                             .authenticated()
                             .and()
