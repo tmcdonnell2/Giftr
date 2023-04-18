@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -30,13 +31,16 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+            .csrf()
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+            .and()
             .authorizeHttpRequests(auth -> {
                 try {
                     auth
                         .requestMatchers("/", "/error", "/h2/**", "/api/v*/**",
-                                "/api/v*/registration/**", "/confirmed")
-                            .anonymous()
-                            .requestMatchers("/home/add/").hasAnyRole("USER")
+                                "/api/v*/registration/**", "/confirmed", "/favicon.ico", "**/webjars/**")
+                            .permitAll()
+                        .requestMatchers("/home/gifting/").hasAnyRole("USER")
                         .anyRequest()
                             .authenticated()
                             .and()
