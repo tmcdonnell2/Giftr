@@ -2,11 +2,20 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
     <title>Spring Security Example</title>
+    <script>
+        async function logJSONData() {
+            const response = await fetch("http://localhost:8080/api/v1/gifters");
+            const jsonData = await response.json();
+            console.log(jsonData);
+        }
+
+        logJSONData();
+    </script>
 </head>
 <body>
 <h1>Welcome!</h1>
 
 <p>Hello, <span th:text="${gifter.firstName}"></span></p>
-<a th:href="@{/home/add}">Add a gift</a>
+<a th:href="@{/home/giftings}">Add a gift</a>
 </body>
 </html>

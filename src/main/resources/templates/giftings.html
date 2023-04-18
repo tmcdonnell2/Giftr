@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" type="text/css"
+        href="webjars/bootstrap/5.2.3/css/bootstrap.min.css"/>
 </head>
 <body>
 <h1>Giftings Page</h1>
@@ -13,13 +15,57 @@
     <td>Giver</td>
   </tr>
   <tr th:each="gifting: ${giftings}">
-    <td th:text="${gifting.giftName}">Gift Name</td>
+    <td th:text="${gifting.gift.name}">Gift Name</td>
     <td th:text="${gifting.date}">Date</td>
     <th:block th:each="giver: ${gifting.givers}">
-      <td th:text="${giver.firstName} + ','"  >firstName</td>
+      <td th:text="${giver}">Giver</td>
     </th:block>
   </tr>
 </table>
+
+<form action="#" th:action="@{/home/giftings}" class="form-horizontal" th:object="${gifting}" method="post">
+  <label for="giftName">Gift Name</label>
+  <input type="text" id="giftName" name="giftName" placeholder="What was the gift?" th:field="*{gift.name}"/>
+
+  <label for="occasion">Occasion:</label>
+  <input type="text" name="occasion" id="occasion" list="occasion_list" th:field="*{occasion}"
+         placeholder="What event did you receive it?"/>
+  <datalist id="occasion_list">
+    <select>
+      <option th:each="occasion : ${T(com.giftr.gifting.Occasion).values()}" th:value="${occasion.displayValue}">
+      </option>
+    </select>
+  </datalist>
+
+  <label for="date">Date</label>
+  <input type="date" id="date" name="date" th:field="*{date}"/>
+
+  <label>Giver</label>
+  <input list="givers" th:field="*{givers}"/>
+  <datalist id="givers" th:if="${not #lists.isEmpty(givers)}" th:each="giver: ${givers}">
+    <select>
+      <option value="${giver}" label="${giver}"></option>
+    </select>
+  </datalist>
+  <datalist id="givers" th:if="${#lists.isEmpty(givers)}">
+  </datalist>
+
+  <label>Favorite?</label>
+  <input type="checkbox" th:field="*{favorite}"/>
+
+  <button type="submit" value="submit">Add Gift</button>
+  <button type="reset" value="reset">Reset</button>
+
+</form>
+  <div class="alert alert-success fill-parent" th:if="${success}">
+    <h1 class="display-5">Success</h1>
+    <span th:text="${message}">Success Message</span>
+  </div>
+  <div class="alert alert-danger fill-parent" th:if="${error}">
+    <h1 class="display-5">Error</h1>
+    <span>Your changes were not saved</span>
+    <span th:text="${message}">Error Message</span>
+  </div>
 
 </body>
 </html>

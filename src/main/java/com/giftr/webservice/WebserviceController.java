@@ -5,17 +5,14 @@ import com.giftr.gift.Gift;
 import com.giftr.gifting.Gifting;
 import com.giftr.gifting.GiftingService;
 import com.giftr.util.DateUtil;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class WebserviceController {
     private final GiftingService giftingService;
 
@@ -23,13 +20,13 @@ public class WebserviceController {
         this.giftingService = giftingService;
     }
 
-    @GetMapping(path="giftings/{date}")
+    @GetMapping(path="/giftings/{date}")
     public List<Gifting> getGiftingsByDate(@RequestParam(value="date", required=false) String dateString) {
         LocalDate date = DateUtil.getDate(dateString);
         return giftingService.getGiftingForDate(date);
     }
 
-    @GetMapping(path="giftings")
+    @GetMapping(path="/giftings")
     public List<Gifting> getGiftings() {
         return giftingService.getGiftings();
     }
