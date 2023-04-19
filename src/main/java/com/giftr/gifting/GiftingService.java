@@ -104,4 +104,8 @@ public class GiftingService {
                     )
                 );
     }
+
+    public void deleteGiftingById(Long giftingId) {
+        giftingRepository.deleteById(giftingId);
+    }
 }

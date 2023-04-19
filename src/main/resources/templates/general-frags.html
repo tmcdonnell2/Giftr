@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head (title, script)">
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css"
+          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
+    <link rel="icon" type="image/x-icon"
+          th:href="@{../static/favicon.ico}">
+    <script
+          th:src="@{/webjars/jquery/3.6.4/jquery.min.js}"></script>
+    <title th:text="${title}">Title</title>
+</head>
+<body>
+</body>
+</html>

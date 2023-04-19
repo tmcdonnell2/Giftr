@@ -1,62 +1,90 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" type="text/css"
-        href="webjars/bootstrap/5.2.3/css/bootstrap.min.css"/>
+  <div th:replace="~{general-frags.html :: head (title=Giftings,script=giftings.js)}" th:remove="tag"></div>
+  <script th:src="@{/js/giftings.js}" type="text/javascript"></script>
 </head>
 <body>
+
 <h1>Giftings Page</h1>
-<table>
-  <tr>
-    <td>Name</td>
-    <td>Date</td>
-    <td>Giver</td>
-  </tr>
-  <tr th:each="gifting: ${giftings}">
-    <td th:text="${gifting.gift.name}">Gift Name</td>
-    <td th:text="${gifting.date}">Date</td>
-    <th:block th:each="giver: ${gifting.givers}">
-      <td th:text="${giver}">Giver</td>
-    </th:block>
-  </tr>
-</table>
 
-<form action="#" th:action="@{/home/giftings}" class="form-horizontal" th:object="${gifting}" method="post">
-  <label for="giftName">Gift Name</label>
-  <input type="text" id="giftName" name="giftName" placeholder="What was the gift?" th:field="*{gift.name}"/>
+<div class="container">
+    <table class="table table-striped" id="giftings-table">
+      <tr>
+        <td>Name</td>
+        <td>Date</td>
+        <td>Giver</td>
+      </tr>
+      <tr th:each="gifting: ${giftings}">
+        <td th:text="${gifting.gift.name}">Gift Name</td>
+        <td th:text="${gifting.date}">Date</td>
+        <th:block th:each="giver: ${gifting.givers}">
+          <td th:text="${giver}">Giver</td>
+        </th:block>
+        <td>
+          <form th:object="${gifting}" th:action="@{/deleteGifting/{id}(id=${gifting.id})}" th:method="delete">
+            <input type="hidden" name="_method" value="delete"/>
+            <button type="submit" class="btn btn-danger" value="Delete">Delete</button>
+          </form>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
 
-  <label for="occasion">Occasion:</label>
-  <input type="text" name="occasion" id="occasion" list="occasion_list" th:field="*{occasion}"
-         placeholder="What event did you receive it?"/>
-  <datalist id="occasion_list">
-    <select>
-      <option th:each="occasion : ${T(com.giftr.gifting.Occasion).values()}" th:value="${occasion.displayValue}">
-      </option>
-    </select>
-  </datalist>
+<div class="container p-3 m-3">
+  <form id="add_gifting_form" th:action="@{/home/giftings}" th:object="${gifting}"
+        method="post" class="align-items-center">
+    <div>
+      <label for="giftName" class="form-label">Gift Name</label>
+      <input type="text" id="giftName" name="giftName"
+             placeholder="What was the gift?" th:field="*{gift.name}" class="form-control"/>
+    </div>
 
-  <label for="date">Date</label>
-  <input type="date" id="date" name="date" th:field="*{date}"/>
+    <div class="form-group">
+      <label for="occasion" class="form-label">Occasion:</label>
+      <input type="text" name="occasion" id="occasion" list="occasion_list" th:field="*{occasion}"
+             placeholder="What event did you receive it?" class="form-control"/>
+      <datalist id="occasion_list">
+        <select>
+          <option th:each="occasion : ${T(com.giftr.gifting.Occasion).values()}" th:value="${occasion.displayValue}">
+          </option>
+        </select>
+      </datalist>
+    </div>
 
-  <label>Giver</label>
-  <input list="givers" th:field="*{givers}"/>
-  <datalist id="givers" th:if="${not #lists.isEmpty(givers)}" th:each="giver: ${givers}">
-    <select>
-      <option value="${giver}" label="${giver}"></option>
-    </select>
-  </datalist>
-  <datalist id="givers" th:if="${#lists.isEmpty(givers)}">
-  </datalist>
+    <div class="form-group">
+      <label for="date" class="form-label">Date</label>
+      <input type="date" id="date" name="date" th:field="*{date}" class="form-control"/>
+    </div>
 
-  <label>Favorite?</label>
-  <input type="checkbox" th:field="*{favorite}"/>
+    <div class="form-group">
+      <label for="givers" class="form-label">Giver</label>
+      <input list="givers" th:field="*{givers}" class="form-control"/>
+      <datalist id="givers" th:if="${not #lists.isEmpty(givers)}" th:each="giver: ${givers}">
+        <select>
+          <option value="${giver}" label="${giver}"></option>
+        </select>
+      </datalist>
+      <datalist id="givers" th:if="${#lists.isEmpty(givers)}">
+      </datalist>
+    </div>
 
-  <button type="submit" value="submit">Add Gift</button>
-  <button type="reset" value="reset">Reset</button>
+    <div class="form-check">
+      <input id="favorite" type="checkbox" th:field="*{favorite}" class="form-check-input"/>
+      <label for="favorite" class="form-label">Favorite?</label>
+    </div>
 
-</form>
+    <div class="form-group mb-2">
+      <label for="comment" class="form-label">Comment</label>
+      <textarea id="comment" th:field="*{comment}" class="form-control"></textarea>
+    </div>
+
+    <button type="submit" value="submit" class="btn btn-primary">Add Gift</button>
+    <button type="reset" value="reset" class="btn btn-primary">Reset</button>
+  </form>
+</div>
+
   <div class="alert alert-success fill-parent" th:if="${success}">
     <h1 class="display-5">Success</h1>
     <span th:text="${message}">Success Message</span>

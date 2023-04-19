@@ -28,6 +28,8 @@ public class Gifting {
     private boolean favorite;
     private LocalDate date;
 
+    private String comment;
+
     public long getId() {
         return id;
     }
@@ -82,5 +84,13 @@ public class Gifting {
 
     public void setGift(Gift gift) {
         this.gift = gift;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }
