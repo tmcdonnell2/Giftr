@@ -38,7 +38,8 @@ public class WebSecurityConfig {
                 try {
                     auth
                         .requestMatchers("/", "/error", "/h2/**", "/api/v*/**",
-                                "/api/v*/registration/**", "/confirmed", "/favicon.ico", "**/webjars/**")
+                                "/api/v*/registration/**", "/confirmed", "**/webjars/**",
+                                "static/**")
                             .permitAll()
                         .requestMatchers("/home/gifting/").hasAnyRole("USER")
                         .anyRequest()

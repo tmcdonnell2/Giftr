@@ -57,12 +57,21 @@ public class GiftingController {
         gifting.setReceiver(gifter);
         try {
             giftingService.addGifting(gifting);
+            for (String key : model.asMap().keySet()) {
+                System.out.println(key);
+            }
             model.addAttribute("success",true);
             model.addAttribute("message","Gift added!");
         } catch (Exception e) {
             model.addAttribute("error",true);
             model.addAttribute("message","An error occurred. Please try again later.");
         }
-        return "redirect:/home/giftings";
+        return "giftings :: #giftings-table";
+    }
+
+    @DeleteMapping("/deleteGifting/{id}")
+    public String deleteEmployee(@PathVariable("id") long giftingId) {
+        giftingService.deleteGiftingById(giftingId);
+        return "giftings :: #giftings-table";
     }
 }
