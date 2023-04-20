@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 @Controller
-@RequestMapping("/home/giftings")
+@RequestMapping(value={"/home/giftings", "/home/giftings/"})
 public class GiftingController {
 
     private final GiftingService giftingService;
@@ -69,8 +69,8 @@ public class GiftingController {
         return "giftings :: #giftings-table";
     }
 
-    @DeleteMapping("/deleteGifting/{id}")
-    public String deleteEmployee(@PathVariable("id") long giftingId) {
+    @DeleteMapping("/delete/{id}")
+    public String deleteGifting(@PathVariable("id") long giftingId) {
         giftingService.deleteGiftingById(giftingId);
         return "giftings :: #giftings-table";
     }

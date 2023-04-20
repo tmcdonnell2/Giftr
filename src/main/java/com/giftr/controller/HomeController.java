@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/home")
+@RequestMapping(value={"/home", "/home/"})
 public class HomeController {
 
     private final GiftingService giftingService;
@@ -20,9 +20,7 @@ public class HomeController {
 
     @GetMapping()
     public String getGifter(Model model, @AuthenticationPrincipal Gifter user) {
-        Gifter gifter =
-                giftingService.getGifterByEmail(user.getEmail());
-        model.addAttribute("gifter", gifter);
+        model.addAttribute("gifter", user);
         return "home";
     }
 }

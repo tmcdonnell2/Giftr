@@ -22,7 +22,7 @@
           <td th:text="${giver}">Giver</td>
         </th:block>
         <td>
-          <form th:object="${gifting}" th:action="@{/deleteGifting/{id}(id=${gifting.id})}" th:method="delete">
+          <form th:object="${gifting}" th:action="@{home/gifting/delete/{id}(id=${gifting.id})}" th:method="delete">
             <input type="hidden" name="_method" value="delete"/>
             <button type="submit" class="btn btn-danger" value="Delete">Delete</button>
           </form>
